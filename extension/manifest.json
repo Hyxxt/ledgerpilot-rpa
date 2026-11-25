@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "LedgerPilot 表格采集助手",
+  "description": "把当前网页的订单或流水表映射成对账工作台可导入的 CSV。",
+  "version": "1.0.0",
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {"default": "Alt+Shift+L"}
+    }
+  },
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "action": {
+    "default_title": "采集当前页表格",
+    "default_popup": "popup.html"
+  }
+}

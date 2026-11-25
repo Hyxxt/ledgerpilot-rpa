@@ -1,0 +1,61 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>LedgerPilot · 对账运行中心</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body>
+<aside class="rail">
+  <div class="brand"><b class="brandmark"><i></i><i></i><i></i></b><span>LedgerPilot</span></div>
+  <nav><button data-view="desk"><span data-icon="grid"></span>对账工作台</button><button data-view="history"><span data-icon="history"></span>运行历史</button><button data-view="sources"><span data-icon="database"></span>数据来源</button></nav>
+  <div class="local"><i></i>本地运行环境</div>
+</aside>
+<main class="shell">
+  <header class="top" hidden><strong id="crumb"></strong></header>
+  <section id="desk">
+    <div class="command-hero" id="command-hero">
+      <div class="command-copy"><span class="hero-status" id="state-tag"></span><h1>对账运行中心</h1><p id="source-caption"></p><div class="actions" id="run-actions"></div></div>
+      <svg class="routing" viewBox="0 0 500 220" role="img" aria-label="订单和流水通过核对引擎生成复核记录">
+            <defs>
+              <pattern id="mesh" width="45" height="26" patternUnits="userSpaceOnUse"><path d="m0 0 45 26m0-26L0 26" stroke="#a6e5d9" stroke-opacity=".09" fill="none"/></pattern>
+              <linearGradient id="lid" x2=".8" y2="1"><stop stop-color="#d1ffe0"/><stop offset="1" stop-color="#54dfbe"/></linearGradient>
+              <filter id="halo" x="-60%" y="-100%" width="220%" height="300%"><feGaussianBlur stdDeviation="8"/></filter>
+            </defs>
+            <path d="M0 0h500v220H0z" fill="url(#mesh)"/>
+            <g fill="none" stroke="#469482" stroke-width="1.7">
+              <path d="m87 68 63 36 32-18 55 32m-117 35 49-28 18 10 50-30m37 15 44 25 66-38m-119 11 44 25 53 30"/>
+            </g>
+            <g class="signals" fill="none" stroke="#9df9ce" stroke-width="2.7" stroke-dasharray="7 93" pathLength="100">
+              <path pathLength="100" d="m87 68 63 36 32-18 55 32"/><path pathLength="100" d="m120 153 49-28 18 10 50-30"/><path pathLength="100" d="m274 120 44 25 66-38"/>
+            </g>
+            <g fill="#184b43" stroke="#74bdaa"><path d="m56 63 31-18 31 18v8L87 89 56 71z"/><path d="m56 63 31 18 31-18M87 81v8"/>
+            <path d="m90 148 30-17 30 17v8l-30 17-30-17z"/><path d="m90 148 30 17 30-17M120 165v8"/>
+            <path d="m354 99 30-17 30 17v8l-30 17-30-17z"/><path d="m354 99 30 17 30-17M384 116v8"/></g>
+            <g fill="none" stroke="#c3f3db" stroke-width="1.8"><path d="m73 62 13-8 15 8-13 8z m7 1 8-5m-3 8 8-5M109 147l10-6 12 7-10 6z M372 99l7 4 14-10"/></g>
+            <ellipse cx="252" cy="139" rx="57" ry="18" fill="#52d6af" opacity=".28" filter="url(#halo)"/>
+            <g stroke-linejoin="round"><path d="m202 114 50-29 50 29v14l-50 29-50-29z" fill="#286556" stroke="#70af99"/><path d="m202 114 50 29 50-29m-50 29v14" fill="none" stroke="#70af99"/>
+            <g class="processor"><path d="m202 92 50-29 50 29v13l-50 29-50-29z" stroke="#a6edd0" fill="#41917c"/><path d="m202 92 50 29 50-29-50-29z" fill="url(#lid)"/><path d="m252 121v13" stroke="#bafcdf"/><path d="m232 91 13 7 23-16" stroke="#174d3b" stroke-width="4" fill="none"/></g></g>
+            <g font-size="12" fill="#b5d6cc" text-anchor="middle" font-family="system-ui,sans-serif"><text x="87" y="37">订单页</text><text x="119" y="194">流水页</text><text x="252" y="180">核对引擎</text><text x="385" y="72">复核队列</text></g>
+          </svg>
+    </div>
+    <div id="metrics" class="metrics"></div>
+    <div class="studio">
+      <section class="panel monitor"><div class="paneltitle"><h2>采集监视器</h2><span id="mode" class="monitor-mode"></span></div>
+        <div class="screen"><div class="screenbar"><span class="window-dots" aria-hidden="true">● ● ●</span><span id="frame-name"></span><a id="evidence" target="_blank" rel="noopener" hidden>原始截图 ↗</a></div><div id="frame-content"></div></div>
+        <div class="transport"><button id="playback" type="button" aria-label="播放回放">▶</button><input id="scrubber" type="range" min="0" max="1" value="0" aria-label="运行回放进度"><span id="position"></span><button id="speed" type="button" aria-label="切换回放速度">1×</button></div>
+      </section>
+      <section class="panel activity"><div class="paneltitle"><h2>事件时间线</h2><span id="event-count"></span></div><ol id="events"></ol><div class="flowfoot"><span id="progress-copy"></span><progress id="progress" value="0" max="1"></progress></div></section>
+    </div>
+    <section class="panel" id="result-section"><div class="paneltitle"><div><h2>核对明细</h2><p id="result-sub"></p></div><a class="button" id="export" hidden>导出 CSV ↗</a></div>
+      <div class="toolbar"><div id="filters" class="seg"><button data-filter="all">全部</button><button data-filter="open">待复核</button><button data-filter="reviewed">已复核</button></div><input type="search" id="search" aria-label="搜索订单号或客户" placeholder="搜索订单号或客户"></div>
+      <div id="result-table"></div><div id="pager" class="pager"></div>
+    </section>
+    <details class="panel journal" id="journal"><summary>执行日志</summary><ol id="logs"></ol></details>
+  </section>
+  <section id="history" hidden><div class="heading"><div><h1>运行历史</h1><p>查看各次运行的来源快照、核对结果与复核记录。</p></div></div><div class="panel" id="history-list"></div></section>
+  <section id="sources" hidden><div class="heading"><div><h1>数据来源</h1><p>查看机器人读取的业务网页，或导入自己的两张表。</p></div></div>
+    <div class="panel"><div class="paneltitle"><h2 id="source-name"></h2></div><div class="source-links"><a href="/source/current/orders" target="_blank" rel="noopener">打开订单页面 ↗</a><a href="/source/current/payments" target="_blank" rel="noopener">打开流水页面 ↗</a></div></div>
+    <form class="panel import" id="import-form"><h2>导入对账数据</h2><p>上传两份 UTF-8 CSV。金额单位为元，每张表最多 2500 行。导入后可先打开源页面核对。</p>
+      <label>账期名称<input name="name" maxlength="60" placeholder="例如：十一月电商订单" required></label>
+      <div class="filegrid"><label>订单表 <a href="/template/orders">下载样表 ↓</a><input type="file" name="orders" accept=".csv,text/csv" required></label><label>流水表 <a href="/template/payments">下载样表 ↓</a><input type="file" name="payments" accept=".csv,text/csv" required></label></div>
+      <div class="actions"><button class="primary" type="submit">校验并导入</button><button id="reset-source" type="button">使用示例账期</button></div></form>
+  </section>
+</main>
+<dialog id="detail"><header><h2>记录详情</h2><button id="close" aria-label="关闭详情">×</button></header><div id="detail-body"></div></dialog>
+<div id="toast" role="status" hidden></div>
+</body></html>

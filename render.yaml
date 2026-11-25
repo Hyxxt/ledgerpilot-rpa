@@ -1,0 +1,27 @@
+# Render Blueprint —— 把仓库连到 Render 后会自动识别这份配置
+# 注意：Docker 部署 + Chromium 常驻，免费实例的 512MB 内存大概率 OOM，
+#       所以这里写 starter。想先白试可以临时改成 free，跑不起来再升。
+services:
+  - type: web
+    name: ledgerpilot
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/state
+    autoDeploy: true
+    envVars:
+      - key: AUTO_SEED
+        value: "1"
+      - key: LEDGER_DATA
+        value: /tmp/ledgerpilot-data
+      - key: LEDGER_HOST
+        value: 0.0.0.0
+      - key: PLAYWRIGHT_BUNDLED
+        value: "1"
+      - key: PLAYWRIGHT_BROWSERS_PATH
+        value: /ms-playwright
+      - key: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD
+        value: "1"
+      # NODE_ENV=production 会让 launchBrowser 走内置 Chromium 分支
+      - key: NODE_ENV
+        value: production
